@@ -14,9 +14,7 @@ router.get('/', function(req, res) {
 
 /* GET /photos/123 */
 router.get('/photos/:id', function(req, res) {
-  var photoId = req.param('id');  // photoId = 500
-  console.log(photoId);
-  // fakedb[photoId] = ? undefined
+  var photoId = req.param('id');
   res.render('photo', { url: fakedb[photoId] });
 });
 
