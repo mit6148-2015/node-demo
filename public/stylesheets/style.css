@@ -10,3 +10,7 @@ a {
 input[type=text] {
   width: 500px;
 }
+
+img {
+  max-width: 500px;
+}

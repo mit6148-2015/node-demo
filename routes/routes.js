@@ -1,14 +1,12 @@
 var express = require('express');
 var router = express.Router();
 
-var fakedb = {
-  1: {
-    url:'http://6.470.scripts.mit.edu/2015/css/img/logo.svg',
-    caption: '6.148 is great!'
-  }
-};
+// Import our models file to the router
+var models = require('../models/models');
 
-var counter = 2;
+// Connect to the database over Mongoose
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/photos-demo');
 
 /* GET / -- homepage */
 router.get('/', function(req, res) {
@@ -18,7 +16,10 @@ router.get('/', function(req, res) {
 /* GET /photos/123 */
 router.get('/photos/:id', function(req, res) {
   var photoId = req.param('id');
-  res.render('photo', { photo: fakedb[photoId] });
+  models.Photo.findOne({_id: photoId}, function(err, result) {
+    console.log(result);
+    res.render('photo', { photo: result });
+  });
 });
 
 /* a page to add a new photo */
@@ -29,15 +30,14 @@ router.get('/upload', function(req, res) {
 
 /* POST /photos */
 router.post('/photos', function(req, res) {
-  // 1. read the submitted url
-  var submittedUrl = req.body['submitted-url'];
-  var caption = req.body['caption'];
-  // 2. store it.
-  fakedb[counter] = {
-    url: submittedUrl,
-    caption: caption
-  };
-  res.redirect('/photos/' + (counter++));
+  var newPhoto = new models.Photo({
+    caption: req.body['submitted-url'],
+    url: req.body['caption']
+  });
+  newPhoto.save(function(err, result) {
+    console.log(result);
+    res.redirect('/photos/' + result._id);
+  });
 });
 
 module.exports = router;
