@@ -31,8 +31,8 @@ router.get('/upload', function(req, res) {
 /* POST /photos */
 router.post('/photos', function(req, res) {
   var newPhoto = new models.Photo({
-    caption: req.body['submitted-url'],
-    url: req.body['caption']
+    url: req.body['submitted-url'],
+    caption: req.body['caption']
   });
   newPhoto.save(function(err, result) {
     console.log(result);
